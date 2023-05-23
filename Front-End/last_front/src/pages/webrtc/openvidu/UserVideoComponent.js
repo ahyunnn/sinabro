@@ -9,7 +9,7 @@ const UserVideoComponent = ({
   mode,
   role,
   unmuteOne,
-  sub,
+  handleMainVideoStream,
 }) => {
   const getNicknameTag = () => {
     return JSON.parse(streamManager.stream.connection.data).clientData;
@@ -28,8 +28,11 @@ const UserVideoComponent = ({
             {role === "teacher" ? (
               <div>
                 <p>{getNicknameTag()}</p>
-                <StyledBtn onClick={() => unmuteOne(sub)}>
+                <StyledBtn onClick={() => unmuteOne(streamManager)}>
                   음소거 해제
+                </StyledBtn>
+                <StyledBtn onClick={() => handleMainVideoStream(streamManager)}>
+                  무대로 보내기
                 </StyledBtn>
               </div>
             ) : null}
@@ -50,6 +53,7 @@ const StyledBtn = styled.button`
   width: 100px;
   height: 30px;
   cursor: pointer;
+  display: inline-block;
 `;
 
 const StyledVideo = styled.div`
@@ -58,7 +62,8 @@ const StyledVideo = styled.div`
 `;
 
 const StyledBtnDiv = styled.div`
-  background-color: black;
+  position: absolute;
+  background-color: transparent;
 `;
 
 const StyledP = styled.p`
@@ -76,7 +81,7 @@ const buttonDiv = styled.div`
 `;
 
 const ParentDiv = styled.div`
-  /* position: relative; */
+  position: relative;
 `;
 
 const NameDiv = styled.div`

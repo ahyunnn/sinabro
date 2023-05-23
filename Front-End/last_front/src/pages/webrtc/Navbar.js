@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 function Navbar({ handleMode, handleScreenShare, role, tname, info }) {
-
   const changeShare = async () => {
     await handleScreenShare();
     handleMode("share");
@@ -32,9 +31,9 @@ function Navbar({ handleMode, handleScreenShare, role, tname, info }) {
         </HeaderWrapper>
 
         <LeftWrapper>
-          <ModeButton onClick={changeShare}>share</ModeButton>
-          <ModeButton onClick={changeFocus}>focus</ModeButton>
-          <ModeButton onClick={changeTogether}>together</ModeButton>
+          <ModeButton onClick={changeShare}>화면공유</ModeButton>
+          <ModeButton onClick={changeFocus}>함께하기</ModeButton>
+          <ModeButton onClick={changeTogether}>발표하기</ModeButton>
         </LeftWrapper>
       </Wrapper>
     );
@@ -48,7 +47,8 @@ function Navbar({ handleMode, handleScreenShare, role, tname, info }) {
 
         <LeftWrapper>
           <StyledP>
-            현재 수강하고 계신 강의는 { tname } 강사님의 { info.myClassroom } 교실입니다 :){" "}
+            현재 수강하고 계신 강의는 {tname} 강사님의 {info.myClassroom}{" "}
+            교실입니다 :){" "}
           </StyledP>
         </LeftWrapper>
       </Wrapper>

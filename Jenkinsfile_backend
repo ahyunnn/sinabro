@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    stages {
+        stage('Gitlab') {
+            steps {
+                git branch: 'master',
+                credentialsId: 'GitLab',
+                url: '${GitLab 접속 주소}'
+            }
+        }
+        stage('Build') {
+            steps {
+                dir('Back-End') {
+                    sh "chmod +x gradlew"
+                    sh "./gradlew bootJar"
+                    sh "mv ./build/libs/*.jar ..${Dockerfile 경로}"
+                }
+                dir('Dockerfiles/d203-backend') {
+                    script {
+                        dockerImage = docker.build "${도커 허브 이름/도커 이미지 이름:태그}"
+                    }
+                }
+            }
+        }
+        stage('Docker hub push') {
+            steps {
+                script {
+                    docker.withRegistry('', 'Docker-Hub') {
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push("latest")
+                    }
+                    sh "docker rmi ${도커 허브 이름/도커 이미지 이름:$BUILD_NUMBER}"
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sshagent(credentials: ['ec2-ssh']) {
+                    sh 'ssh -o StrictHostKeyChecking=no ${사용자 이름@ssh 접속 주소} "docker stop ${컨테이너 이름}"'
+                    sh 'ssh -o StrictHostKeyChecking=no ${사용자 이름@ssh 접속 주소} "docker rm -f ${컨테이너 이름}"'
+                    sh 'ssh -o StrictHostKeyChecking=no ${사용자 이름@ssh 접속 주소} "docker run -dp 5000:5000 -e SPRING_DATASOURCE_URL=jdbc:mysql://${도커 내부 네트워크 주소}:3306/${DB 이름}?serverTimezone=Asia/Seoul --net=bridge --name ${컨테이너 이름} ${도커 허브 이름/도커 이미지 이름:태그}"'
+                    sh 'docker image prune -f'
+                }
+            }
+        }
+    }
+}

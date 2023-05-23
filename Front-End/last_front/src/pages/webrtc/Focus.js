@@ -107,14 +107,15 @@ function Focus({ info, handleMainVideoStream, mode, ratio, role, unmuteOne }) {
             user={user}
             mode={mode}
             role={role}
+            handleMainVideoStream={handleMainVideoStream}
           />
 
           {info.subscribers.map((sub, i) => (
             <div
               key={i}
-              onClick={() => {
-                handleMainVideoStream(sub);
-              }}
+              // onClick={() => {
+              //   handleMainVideoStream(sub);
+              // }}
             >
               <UserVideoComponent
                 streamManager={sub}
@@ -122,7 +123,7 @@ function Focus({ info, handleMainVideoStream, mode, ratio, role, unmuteOne }) {
                 mode={mode}
                 role={role}
                 unmuteOne={unmuteOne}
-                sub={sub}
+                handleMainVideoStream={handleMainVideoStream}
               />
             </div>
           ))}
@@ -147,6 +148,7 @@ const StyledDiv = styled.div`
   /* position: relative; */
   /* justify-items: center;
   justify-content: center; */
+  text-align: center;
   display: grid;
 
   ${({ user }) => {
